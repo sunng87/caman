@@ -319,6 +319,19 @@ function command_sign_host {
             > "$CERTDIR/$HOST.chained.keycrt.pem" \
             || exit 1
     fi
+
+    # Create p12 file
+    echo "Create p12 file"
+    if [[ -f "$CERTDIR/$HOST.chained.crt.pem" ]] ; then
+        call_openssl pkcs12 -export -in "$CERTDIR/$HOST.chained.crt.pem" \
+                     -inkey "$CERTDIR/$HOST.key.pem" \
+                     -out "$CERTDIR/$HOST.p12"
+    else
+        call_openssl pkcs12 -export -in "$CERTDIR/$HOST.crt.pem" \
+                     -inkey "$CERTDIR/$HOST.key.pem" \
+                     -out "$CERTDIR/$HOST.p12"
+    fi
+
     echo "Certificate generated"
 }
 
